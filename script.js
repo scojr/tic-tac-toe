@@ -1,42 +1,40 @@
 function gameBoard() {
-
   const gridSize = 3;
-  const grid = [];
+  const gridRows = [];
 
   for (let i = 0; i < gridSize; i++) {
-    grid[i] = [];
+    gridRows[i] = [];
     for (let j = 0; j < gridSize; j++) {
-      grid[i].push("[]")
+      gridRows[i].push(cell())
     }
   }
 
   function printBoard() {
-    console.log(grid[0])
-    console.log(grid[1])
-    console.log(grid[2])
+    for (const row of gridRows) {
+      console.log(row);
+    }
   }
 
-  function placeMarker(marker, x, y) {
-    grid[x][y] = marker;
+  function placeMarker(x, y) {
+    gridRows[x][y] = gameElements.getCurrentPlayer().marker;
+    gameElements.nextRound();
   }
 
   return { printBoard, placeMarker };
 };
 
-const gameLogic = (function () {
+function cell() {
+  let value = 0;
+  const getValue = () => value;
+  return { getValue };
+}
 
+const gameElements = (function () {
   const board = gameBoard();
-  const roundCounter = function () {
-    let currentRound = 0;
-    const nextRound = () => currentRound++;
-    const getCurrentRound = () => currentRound;
-    return { getCurrentRound, nextRound };
-  }();
-
 
   const players = (function () {
-    const playerOne = createPlayer("playerOne", "X");
-    const playerTwo = createPlayer("playerTwo", "O");
+    const playerOne = createPlayer("Player 1", "X");
+    const playerTwo = createPlayer("Player 2", "O");
 
     function createPlayer(name, marker) {
       let score = 0;
@@ -45,9 +43,33 @@ const gameLogic = (function () {
       return { name, marker, getScore, addScore };
     }
     return { playerOne, playerTwo };
-
   })();
 
+  let currentPlayer = players.playerOne;
 
-  return { players, board, roundCounter }
+  const getCurrentPlayer = () => currentPlayer;
+
+  let currentRound = 1;
+  function nextRound() { currentRound++; switchCurrentPlayer(); gameLogic.playRound() };
+  function getCurrentRound() { return currentRound };
+
+  function switchCurrentPlayer() {
+    if (currentPlayer === players.playerOne) {
+      currentPlayer = players.playerTwo;
+    } else {
+      currentPlayer = players.playerOne;
+    }
+  }
+
+  return { board, nextRound, getCurrentRound, getCurrentPlayer }
 })();
+
+const gameLogic = (function () {
+  function playRound() {
+    console.log(`Round ${gameElements.getCurrentRound()}. It is ${gameElements.getCurrentPlayer().name}'s turn.`)
+  }
+
+  return { playRound }
+})();
+
+gameLogic.playRound();
