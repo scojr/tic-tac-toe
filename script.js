@@ -5,28 +5,34 @@ function gameBoard() {
   for (let i = 0; i < gridSize; i++) {
     gridRows[i] = [];
     for (let j = 0; j < gridSize; j++) {
-      gridRows[i].push(cell())
+      gridRows[i].push(createCell(i, j))
     }
   }
 
   function printBoard() {
     for (const row of gridRows) {
-      console.log(row);
+      const rowValues = row.map((x) => x.getValue());
+      console.log(rowValues);
     }
   }
 
   function placeMarker(x, y) {
-    gridRows[x][y] = gameElements.getCurrentPlayer().marker;
-    gameElements.nextRound();
+    const cellRow = gridRows[x];
+    const currentCell = cellRow[y];
+    if (!currentCell.getValue()) {
+      currentCell.writeMarker();
+      gameElements.nextRound();
+    }
   }
 
   return { printBoard, placeMarker };
 };
 
-function cell() {
+function createCell(x, y) {
   let value = 0;
   const getValue = () => value;
-  return { getValue };
+  const writeMarker = () => value = gameElements.getCurrentPlayer().marker;
+  return { x, y, getValue, writeMarker };
 }
 
 const gameElements = (function () {
