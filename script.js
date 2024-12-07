@@ -147,9 +147,24 @@ const displayController = function () {
     return { domGameBoard };
   }();
 
+  function assignImg(input) {
+    if (input) {
+      const img = document.createElement("img");
+      const svg = {
+        X: "images/X.svg",
+        O: "images/O.svg",
+      }
+      img.setAttribute("src", svg[input])
+      img.setAttribute("alt", input)
+      img.setAttribute("width", "200")
+      img.setAttribute("height", "200")
+      return img;
+    } else return document.createElement("div");
+  };
+
   function clearGrid() {
     const cells = document.querySelectorAll(".cell");
-    for (cell of cells) {
+    for (const cell of cells) {
       cell.remove();
     }
   }
@@ -159,8 +174,9 @@ const displayController = function () {
     for (const array of rows) {
       for (const item of array) {
         const cell = document.createElement("div");
-        cell.textContent = item.getValue();
+        const img = assignImg(item.getValue());
         cell.classList.add("cell", item.getValue());
+        cell.appendChild(img);
         domElements.domGameBoard.appendChild(cell);
       }
     }

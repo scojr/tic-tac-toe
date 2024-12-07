@@ -51,8 +51,8 @@ body {
 
 .game-board {
   display: grid;
-  grid-template-columns: repeat(3, 50px);
-  grid-template-rows: repeat(3, 50px);
+  grid-template-columns: repeat(3, 200px);
+  grid-template-rows: repeat(3, 200px);
   text-align: center;
   justify-content: center;
   gap: 10px;
@@ -60,4 +60,7 @@ body {
 
 .cell {
   background-color: bisque;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
