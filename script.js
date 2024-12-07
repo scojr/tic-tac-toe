@@ -1,12 +1,20 @@
 function gameBoard() {
   const gridSize = 3;
-  const gridRows = [];
+  let gridRows = [];
 
   for (let i = 0; i < gridSize; i++) {
     gridRows[i] = [];
     for (let j = 0; j < gridSize; j++) {
       gridRows[i].push(createCell(i, j))
     }
+  }
+
+  function createCell(x, y) {
+    let value = 0;
+    const getValue = () => value;
+    const writeValue = () => value = gameElements.getCurrentPlayer().marker;
+    const resetValue = () => value = 0;
+    return { x, y, getValue, writeValue, resetValue };
   }
 
   function printBoard() {
@@ -21,8 +29,7 @@ function gameBoard() {
     const currentCell = cellRow[y];
     if (!currentCell.getValue()) {
       currentCell.writeValue();
-      if (checkBoardStatus()) console.log("true"); else console.log("false");
-      gameElements.nextRound();
+      if (checkBoardStatus()) gameLogic.winDetected(gameElements.getCurrentPlayer()); else gameElements.nextRound();
     }
   }
 
@@ -45,28 +52,32 @@ function gameBoard() {
     if (threeValuesEqual(gridCornerValues[0], gridCenterValue, gridCornerValues[3])) return true;
     if (threeValuesEqual(gridCornerValues[2], gridCenterValue, gridCornerValues[1])) return true;
 
+    if (gameElements.getCurrentRound() === 9) gameLogic.tieDetected();
+
+  }
+
+  function resetBoard() {
+    for (const row of gridRows) {
+      const rowValues = row;
+      for (const values of rowValues) {
+        values.resetValue();
+      }
+    }
   }
 
   function threeValuesEqual(value1, value2, value3) {
     if (value1 === value2 && value2 === value3 && value1) return true; else return false;
   }
 
-  return { printBoard, placeMarker };
+  return { printBoard, placeMarker, resetBoard };
 };
-
-function createCell(x, y) {
-  let value = 0;
-  const getValue = () => value;
-  const writeValue = () => value = gameElements.getCurrentPlayer().marker;
-  return { x, y, getValue, writeValue };
-}
 
 const gameElements = (function () {
   const board = gameBoard();
 
   const players = (function () {
-    const playerOne = createPlayer("Player 1", "X");
-    const playerTwo = createPlayer("Player 2", "O");
+    const playerOne = createPlayer("Player X", "X");
+    const playerTwo = createPlayer("Player O", "O");
 
     function createPlayer(name, marker) {
       let score = 0;
@@ -80,6 +91,7 @@ const gameElements = (function () {
   let currentPlayer = players.playerOne;
 
   const getCurrentPlayer = () => currentPlayer;
+  const getPlayers = () => players;
 
   let currentRound = 1;
   function nextRound() { currentRound++; switchCurrentPlayer(); gameLogic.playRound() };
@@ -93,7 +105,7 @@ const gameElements = (function () {
     }
   }
 
-  return { board, nextRound, getCurrentRound, getCurrentPlayer }
+  return { board, nextRound, getCurrentRound, getCurrentPlayer, getPlayers }
 })();
 
 const gameLogic = (function () {
@@ -102,7 +114,30 @@ const gameLogic = (function () {
     gameElements.board.printBoard();
   }
 
-  return { playRound }
+  function winDetected(player) {
+    player.addScore();
+    console.log(`${player.name} wins the game!`)
+    console.log(`Winning Board:`)
+    gameElements.board.printBoard();
+    console.log(`Current Scores:`)
+    console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
+    console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
+    console.log(`Starting new game...`)
+    gameElements.board.resetBoard()
+    playRound();
+  }
+
+  function tieDetected() {
+    console.log(`It's a Tie!`)
+    console.log(`Current Scores:`)
+    console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
+    console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
+    console.log(`Starting new game...`)
+    gameElements.board.resetBoard()
+    playRound();
+  }
+
+  return { playRound, winDetected, tieDetected }
 })();
 
 gameLogic.playRound();
