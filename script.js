@@ -18,6 +18,7 @@ function gameBoard() {
   }
 
   function printBoard() {
+    displayController.drawGrid(gridRows);
     for (const row of gridRows) {
       const rowValues = row.map((x) => x.getValue());
       console.log(rowValues);
@@ -139,5 +140,32 @@ const gameLogic = (function () {
 
   return { playRound, winDetected, tieDetected }
 })();
+
+const displayController = function () {
+  const domElements = function () {
+    const domGameBoard = document.querySelector(".game-board");
+    return { domGameBoard };
+  }();
+
+  function clearGrid() {
+    const cells = document.querySelectorAll(".cell");
+    for (cell of cells) {
+      cell.remove();
+    }
+  }
+
+  function drawGrid(rows) {
+    clearGrid()
+    for (const array of rows) {
+      for (const item of array) {
+        const cell = document.createElement("div");
+        cell.textContent = item.getValue();
+        cell.classList.add("cell", item.getValue());
+        domElements.domGameBoard.appendChild(cell);
+      }
+    }
+  }
+  return { drawGrid };
+}();
 
 gameLogic.playRound();
