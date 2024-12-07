@@ -39,6 +39,11 @@ function gameBoard() {
       }
       if (threeValuesEqual(columnValues[0], columnValues[1], columnValues[2])) return true;
     }
+    const gridCornerValues = [gridRows[0][0].getValue(), gridRows[0][2].getValue(), gridRows[2][0].getValue(), gridRows[2][2].getValue()];
+    const gridCenterValue = gridRows[1][1].getValue();
+
+    if (threeValuesEqual(gridCornerValues[0], gridCenterValue, gridCornerValues[3])) return true;
+    if (threeValuesEqual(gridCornerValues[2], gridCenterValue, gridCornerValues[1])) return true;
 
   }
 
@@ -46,7 +51,7 @@ function gameBoard() {
     if (value1 === value2 && value2 === value3 && value1) return true; else return false;
   }
 
-  return { printBoard, placeMarker, gridRows };
+  return { printBoard, placeMarker };
 };
 
 function createCell(x, y) {
