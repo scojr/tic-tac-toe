@@ -20,19 +20,40 @@ function gameBoard() {
     const cellRow = gridRows[x];
     const currentCell = cellRow[y];
     if (!currentCell.getValue()) {
-      currentCell.writeMarker();
+      currentCell.writeValue();
+      if (checkBoardStatus()) console.log("true"); else console.log("false");
       gameElements.nextRound();
     }
   }
 
-  return { printBoard, placeMarker };
+  function checkBoardStatus() {
+    for (const row of gridRows) {
+      const rowValues = row.map((x) => x.getValue());
+      if (threeValuesEqual(rowValues[0], rowValues[1], rowValues[2])) return true;
+      if (checkColumn(gridRows.indexOf(row))) return true;
+    }
+    function checkColumn(column) {
+      const columnValues = [];
+      for (const row of gridRows) {
+        columnValues.push(row[column].getValue())
+      }
+      if (threeValuesEqual(columnValues[0], columnValues[1], columnValues[2])) return true;
+    }
+
+  }
+
+  function threeValuesEqual(value1, value2, value3) {
+    if (value1 === value2 && value2 === value3 && value1) return true; else return false;
+  }
+
+  return { printBoard, placeMarker, gridRows };
 };
 
 function createCell(x, y) {
   let value = 0;
   const getValue = () => value;
-  const writeMarker = () => value = gameElements.getCurrentPlayer().marker;
-  return { x, y, getValue, writeMarker };
+  const writeValue = () => value = gameElements.getCurrentPlayer().marker;
+  return { x, y, getValue, writeValue };
 }
 
 const gameElements = (function () {
@@ -73,6 +94,7 @@ const gameElements = (function () {
 const gameLogic = (function () {
   function playRound() {
     console.log(`Round ${gameElements.getCurrentRound()}. It is ${gameElements.getCurrentPlayer().name}'s turn.`)
+    gameElements.board.printBoard();
   }
 
   return { playRound }
