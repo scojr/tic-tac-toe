@@ -169,17 +169,30 @@ const displayController = function () {
     }
   }
 
+  function drawCell(x, y, cellItem) {
+    const genCell = document.createElement("div");
+    genCell.setAttribute("data-x", x.indexOf(y));
+    genCell.setAttribute("data-y", y.indexOf(cellItem));
+    const img = assignImg(cellItem.getValue());
+    genCell.classList.add("cell", cellItem.getValue());
+    genCell.appendChild(img);
+    return (genCell);
+  }
+
+  function cellClickDetector(cell) {
+    const cellX = cell.dataset.x;
+    const cellY = cell.dataset.y;
+    gameElements.board.placeMarker(cellX, cellY);
+  }
+
+
   function drawGrid(rows) {
     clearGrid()
     for (const array of rows) {
       for (const item of array) {
-        const cell = document.createElement("div");
-        cell.setAttribute("data-x", rows.indexOf(array));
-        cell.setAttribute("data-y", array.indexOf(item));
-        const img = assignImg(item.getValue());
-        cell.classList.add("cell", item.getValue());
-        cell.appendChild(img);
-        domElements.domGameBoard.appendChild(cell);
+        const domCell = drawCell(rows, array, item);
+        domCell.addEventListener("click", () => cellClickDetector(domCell));
+        domElements.domGameBoard.appendChild(domCell);
       }
     }
   }
