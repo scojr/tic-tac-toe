@@ -174,6 +174,8 @@ const displayController = function () {
     for (const array of rows) {
       for (const item of array) {
         const cell = document.createElement("div");
+        cell.setAttribute("data-x", rows.indexOf(array));
+        cell.setAttribute("data-y", array.indexOf(item));
         const img = assignImg(item.getValue());
         cell.classList.add("cell", item.getValue());
         cell.appendChild(img);
