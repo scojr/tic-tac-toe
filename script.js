@@ -97,6 +97,7 @@ const gameElements = (function () {
   let currentRound = 1;
   function nextRound() { currentRound++; switchCurrentPlayer(); gameLogic.playRound() };
   function getCurrentRound() { return currentRound };
+  function resetRound() { currentRound = 1 };
 
   function switchCurrentPlayer() {
     if (currentPlayer === players.playerOne) {
@@ -106,7 +107,7 @@ const gameElements = (function () {
     }
   }
 
-  return { board, nextRound, getCurrentRound, getCurrentPlayer, getPlayers }
+  return { board, nextRound, getCurrentRound, resetRound, getCurrentPlayer, getPlayers }
 })();
 
 const gameLogic = (function () {
@@ -124,7 +125,7 @@ const gameLogic = (function () {
     console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
     console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
     console.log(`Starting new game...`)
-    gameElements.board.resetBoard()
+    newGame()
     playRound();
   }
 
@@ -134,8 +135,13 @@ const gameLogic = (function () {
     console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
     console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
     console.log(`Starting new game...`)
-    gameElements.board.resetBoard()
+    newGame()
     playRound();
+  }
+
+  function newGame() {
+    gameElements.resetRound()
+    gameElements.board.resetBoard()
   }
 
   return { playRound, winDetected, tieDetected }

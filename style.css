@@ -47,6 +47,12 @@ body {
 .container {
   display: flex;
   justify-content: center;
+  margin-top: 10%;
+}
+
+.border {
+  width: max-content;
+  background-color: black;
 }
 
 .game-board {
@@ -59,7 +65,7 @@ body {
 }
 
 .cell {
-  background-color: bisque;
+  background-color: rgb(255, 255, 255);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,5 +73,5 @@ body {
 
 .cell:hover {
   cursor: pointer;
-  background-color: rgb(255, 215, 189);
+  background-color: rgb(240, 240, 240);
 }
