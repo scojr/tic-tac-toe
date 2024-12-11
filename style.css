@@ -10,9 +10,10 @@
 
 html {
   line-height: 1.5;
-  font-size: 20;
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+  font-size: 200px;
+  font-family: "Comic Sans MS", 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
 }
+
 
 ol[role="list"],
 ul[role="list"] {
@@ -73,7 +74,7 @@ body {
 }
 
 .winning-cell {
-  background-color: green;
+  color: green;
 }
 
 .cell:hover {

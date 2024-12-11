@@ -159,16 +159,13 @@ const displayController = function () {
 
   function assignImg(input) {
     if (input) {
-      const img = document.createElement("img");
-      const svg = {
-        X: "images/X.svg",
-        O: "images/O.svg",
+      const marker = document.createElement("div");
+      const markers = {
+        X: "X",
+        O: "O",
       }
-      img.setAttribute("src", svg[input])
-      img.setAttribute("alt", input)
-      img.setAttribute("width", "200")
-      img.setAttribute("height", "200")
-      return img;
+      marker.textContent = markers[input];
+      return marker;
     } else return document.createElement("div");
   };
 
