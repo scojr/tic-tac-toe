@@ -11,10 +11,13 @@ function gameBoard() {
 
   function createCell(x, y) {
     let value = 0;
+    let winningCell = false;
     const getValue = () => value;
     const writeValue = () => value = gameElements.getCurrentPlayer().marker;
     const resetValue = () => value = 0;
-    return { x, y, getValue, writeValue, resetValue };
+    const setWinningCell = () => winningCell = "winning-cell";
+    const winningCellValue = () => winningCell;
+    return { x, y, getValue, writeValue, resetValue, winningCellValue, setWinningCell };
   }
 
   function printBoard() {
@@ -30,28 +33,29 @@ function gameBoard() {
     const currentCell = cellRow[y];
     if (!currentCell.getValue()) {
       currentCell.writeValue();
-      if (checkBoardStatus()) gameLogic.winDetected(gameElements.getCurrentPlayer()); else gameElements.nextRound();
+      if (checkBoardStatus()) {
+        gameLogic.winDetected(gameElements.getCurrentPlayer(), checkBoardStatus())
+      } else gameElements.nextRound();
     }
   }
 
   function checkBoardStatus() {
     for (const row of gridRows) {
-      const rowValues = row.map((x) => x.getValue());
-      if (threeValuesEqual(rowValues[0], rowValues[1], rowValues[2])) return true;
-      if (checkColumn(gridRows.indexOf(row))) return true;
+      if (threeValuesEqual(row[0], row[1], row[2])) return [row[0], row[1], row[2]];
+      if (checkColumn(gridRows.indexOf(row))) return checkColumn(gridRows.indexOf(row));
     }
     function checkColumn(column) {
       const columnValues = [];
       for (const row of gridRows) {
-        columnValues.push(row[column].getValue())
+        columnValues.push(row[column])
       }
-      if (threeValuesEqual(columnValues[0], columnValues[1], columnValues[2])) return true;
+      if (threeValuesEqual(columnValues[0], columnValues[1], columnValues[2])) return [columnValues[0], columnValues[1], columnValues[2]];
     }
-    const gridCornerValues = [gridRows[0][0].getValue(), gridRows[0][2].getValue(), gridRows[2][0].getValue(), gridRows[2][2].getValue()];
-    const gridCenterValue = gridRows[1][1].getValue();
+    const gridCornerValues = [gridRows[0][0], gridRows[0][2], gridRows[2][0], gridRows[2][2]];
+    const gridCenterValue = gridRows[1][1];
 
-    if (threeValuesEqual(gridCornerValues[0], gridCenterValue, gridCornerValues[3])) return true;
-    if (threeValuesEqual(gridCornerValues[2], gridCenterValue, gridCornerValues[1])) return true;
+    if (threeValuesEqual(gridCornerValues[0], gridCenterValue, gridCornerValues[3])) return [gridCornerValues[0], gridCenterValue, gridCornerValues[3]];
+    if (threeValuesEqual(gridCornerValues[2], gridCenterValue, gridCornerValues[1])) return [gridCornerValues[2], gridCenterValue, gridCornerValues[1]];
 
     if (gameElements.getCurrentRound() === 9) gameLogic.tieDetected();
 
@@ -67,7 +71,7 @@ function gameBoard() {
   }
 
   function threeValuesEqual(value1, value2, value3) {
-    if (value1 === value2 && value2 === value3 && value1) return true; else return false;
+    if (value1.getValue() === value2.getValue() && value2.getValue() === value3.getValue() && value1.getValue()) return [value1, value2, value3]; else return false;
   }
 
   return { printBoard, placeMarker, resetBoard };
@@ -116,32 +120,32 @@ const gameLogic = (function () {
     gameElements.board.printBoard();
   }
 
-  function winDetected(player) {
+  function winDetected(player, winningCells) {
+    for (const cell of winningCells) {
+      cell.setWinningCell();
+    }
     player.addScore();
     console.log(`${player.name} wins the game!`)
     console.log(`Winning Board:`)
     gameElements.board.printBoard();
-    console.log(`Current Scores:`)
-    console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
-    console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
-    console.log(`Starting new game...`)
     newGame()
     playRound();
   }
 
   function tieDetected() {
     console.log(`It's a Tie!`)
-    console.log(`Current Scores:`)
-    console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
-    console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
-    console.log(`Starting new game...`)
+
     newGame()
     playRound();
   }
 
   function newGame() {
+    console.log(`Current Scores:`)
+    console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
+    console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
+    console.log(`Starting new game...`)
     gameElements.resetRound()
-    gameElements.board.resetBoard()
+    // gameElements.board.resetBoard()
   }
 
   return { playRound, winDetected, tieDetected }
@@ -179,6 +183,7 @@ const displayController = function () {
     const genCell = document.createElement("div");
     genCell.setAttribute("data-x", x.indexOf(y));
     genCell.setAttribute("data-y", y.indexOf(cellItem));
+    genCell.classList.add(cellItem.winningCellValue());
     const img = assignImg(cellItem.getValue());
     genCell.classList.add("cell", cellItem.getValue());
     genCell.appendChild(img);

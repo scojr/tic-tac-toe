@@ -50,6 +50,7 @@ body {
   margin-top: 10%;
 }
 
+
 .border {
   width: max-content;
   background-color: black;
@@ -69,6 +70,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.winning-cell {
+  background-color: green;
 }
 
 .cell:hover {
