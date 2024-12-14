@@ -58,7 +58,6 @@ function gameBoard() {
     if (threeValuesEqual(gridCornerValues[2], gridCenterValue, gridCornerValues[1])) return [gridCornerValues[2], gridCenterValue, gridCornerValues[1]];
 
     if (gameElements.getCurrentRound() === 9) gameLogic.tieDetected();
-
   }
 
   function resetBoard() {
@@ -124,6 +123,7 @@ const gameLogic = (function () {
     for (const cell of winningCells) {
       cell.setWinningCell();
     }
+    displayController.drawOverlay(winningCells);
     player.addScore();
     console.log(`${player.name} wins the game!`)
     console.log(`Winning Board:`)
@@ -154,8 +154,16 @@ const gameLogic = (function () {
 const displayController = function () {
   const domElements = function () {
     const domGameBoard = document.querySelector(".game-board");
-    return { domGameBoard };
+    const canvasOverlay = document.querySelector(".canvas-overlay");
+    const canvasOverlayContainer = document.querySelector(".canvas-overlay-container");
+    const alertOverlayContainer = document.querySelector(".alert-overlay-container");
+    return { domGameBoard, canvasOverlay, canvasOverlayContainer, alertOverlayContainer };
   }();
+
+  function displayOverlay() {
+    domElements.canvasOverlayContainer.style.visibility = "visible";
+    domElements.alertOverlayContainer.style.visibility = "visible";
+  };
 
   function assignImg(input) {
     if (input) {
@@ -193,7 +201,6 @@ const displayController = function () {
     gameElements.board.placeMarker(cellX, cellY);
   }
 
-
   function drawGrid(rows) {
     clearGrid()
     for (const array of rows) {
@@ -204,7 +211,34 @@ const displayController = function () {
       }
     }
   }
-  return { drawGrid };
+
+  function drawOverlay(winningCells) {
+    displayOverlay();
+    const cellCoords = function cellsToCoordinates() {
+      console.log(winningCells);
+      const firstCell = winningCells[0];
+      const lastCell = winningCells[2];
+      const canvasSize = 430;
+      function convertCanvasCoord(cellxy) {
+        if (cellxy === 0) return 10; else return cellxy * canvasSize / 2;
+      };
+      const firstX = convertCanvasCoord(firstCell.x);
+      const firstY = convertCanvasCoord(firstCell.y);
+      const lastX = convertCanvasCoord(lastCell.x);
+      const lastY = convertCanvasCoord(lastCell.y);
+      return { firstX, firstY, lastX, lastY }
+    }();
+    const pen = domElements.canvasOverlay.getContext("2d");
+    pen.moveTo(cellCoords.firstY, cellCoords.firstX);
+    console.log(cellCoords.firstX, cellCoords.firstY);
+    pen.lineTo(cellCoords.lastY, cellCoords.lastX);
+    console.log(cellCoords.lastX, cellCoords.lastY);
+    pen.lineWidth = 10;
+    pen.strokeStyle = 'green';
+    pen.stroke();
+  }
+
+  return { drawGrid, drawOverlay, displayOverlay };
 }();
 
 gameLogic.playRound();

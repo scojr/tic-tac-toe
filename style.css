@@ -69,6 +69,7 @@ body {
   text-align: center;
   justify-content: center;
   gap: 10px;
+  font-size: 7rem;
 }
 
 .cell {
@@ -93,6 +94,7 @@ button:hover {
 
 .canvas-overlay-container,
 .alert-overlay-container {
+  visibility: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -114,8 +116,4 @@ button:hover {
 .alert-overlay-container h2 {
   margin: 0;
   font-size: 6rem;
-}
-
-.alert-overlay-container button {
-  margin-top: 700px;
 }
