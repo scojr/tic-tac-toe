@@ -10,7 +10,7 @@
 
 html {
   line-height: 1.5;
-  font-size: 200px;
+  font-size: 20px;
   font-family: "Comic Sans MS", 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
 }
 
@@ -40,17 +40,22 @@ svg {
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100%;
   margin: 0;
   padding: 0;
 }
 
 .container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
   display: flex;
   justify-content: center;
-  margin-top: 10%;
+  align-items: center;
 }
-
 
 .border {
   width: max-content;
@@ -78,6 +83,39 @@ body {
 }
 
 .cell:hover {
-  cursor: pointer;
   background-color: rgb(240, 240, 240);
+}
+
+.cell:hover,
+button:hover {
+  cursor: pointer;
+}
+
+.canvas-overlay-container,
+.alert-overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.alert-overlay-container {
+  z-index: 1;
+  position: absolute;
+  text-align: center;
+  align-items: start;
+}
+
+.alert-overlay-container h2 {
+  margin: 0;
+  font-size: 6rem;
+}
+
+.alert-overlay-container button {
+  margin-top: 700px;
 }
