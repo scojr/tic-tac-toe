@@ -218,9 +218,9 @@ const displayController = function () {
       console.log(winningCells);
       const firstCell = winningCells[0];
       const lastCell = winningCells[2];
-      const canvasSize = 430;
+      const canvasSize = 440;
       function convertCanvasCoord(cellxy) {
-        if (cellxy === 0) return 10; else return cellxy * canvasSize / 2;
+        if (cellxy === 0) return 10; else if (cellxy === 2) return 430; else return cellxy * canvasSize / 2;
       };
       const firstX = convertCanvasCoord(firstCell.x);
       const firstY = convertCanvasCoord(firstCell.y);
