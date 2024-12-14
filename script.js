@@ -14,7 +14,7 @@ function gameBoard() {
     let winningCell = false;
     const getValue = () => value;
     const writeValue = () => value = gameElements.getCurrentPlayer().marker;
-    const resetValue = () => value = 0;
+    const resetValue = () => { value = 0; winningCell = false; }
     const setWinningCell = () => winningCell = "winning-cell";
     const winningCellValue = () => winningCell;
     return { x, y, getValue, writeValue, resetValue, winningCellValue, setWinningCell };
@@ -128,27 +128,31 @@ const gameLogic = (function () {
     console.log(`${player.name} wins the game!`)
     console.log(`Winning Board:`)
     gameElements.board.printBoard();
-    newGame()
+    endGame()
     playRound();
   }
 
   function tieDetected() {
     console.log(`It's a Tie!`)
 
-    newGame()
+    endGame()
     playRound();
   }
 
-  function newGame() {
+  function endGame() {
     console.log(`Current Scores:`)
     console.log(`Current Scores: Player X: ${gameElements.getPlayers().playerOne.getScore()}`)
     console.log(`Current Scores: Player O: ${gameElements.getPlayers().playerTwo.getScore()}`)
-    console.log(`Starting new game...`)
-    gameElements.resetRound()
-    // gameElements.board.resetBoard()
   }
 
-  return { playRound, winDetected, tieDetected }
+  function newGame() {
+    console.log(`Starting new game...`)
+    gameElements.resetRound()
+    gameElements.board.resetBoard()
+    playRound();
+  }
+
+  return { playRound, winDetected, tieDetected, newGame }
 })();
 
 const displayController = function () {
@@ -157,8 +161,15 @@ const displayController = function () {
     const canvasOverlay = document.querySelector(".canvas-overlay");
     const canvasOverlayContainer = document.querySelector(".canvas-overlay-container");
     const alertOverlayContainer = document.querySelector(".alert-overlay-container");
-    return { domGameBoard, canvasOverlay, canvasOverlayContainer, alertOverlayContainer };
+    const alertOverlayButton = document.querySelector("button");
+    return { domGameBoard, canvasOverlay, canvasOverlayContainer, alertOverlayContainer, alertOverlayButton };
   }();
+
+  domElements.alertOverlayButton.addEventListener("click", () => {
+    gameLogic.newGame();
+    domElements.canvasOverlayContainer.style.visibility = "hidden";
+    domElements.alertOverlayContainer.style.visibility = "hidden";
+  });
 
   function displayOverlay() {
     domElements.canvasOverlayContainer.style.visibility = "visible";
@@ -229,6 +240,8 @@ const displayController = function () {
       return { firstX, firstY, lastX, lastY }
     }();
     const pen = domElements.canvasOverlay.getContext("2d");
+    pen.clearRect(0, 0, 440, 440);
+    pen.beginPath()
     pen.moveTo(cellCoords.firstY, cellCoords.firstX);
     console.log(cellCoords.firstX, cellCoords.firstY);
     pen.lineTo(cellCoords.lastY, cellCoords.lastX);
@@ -238,7 +251,7 @@ const displayController = function () {
     pen.stroke();
   }
 
-  return { drawGrid, drawOverlay, displayOverlay };
+  return { drawGrid, drawOverlay, displayOverlay, };
 }();
 
 gameLogic.playRound();
