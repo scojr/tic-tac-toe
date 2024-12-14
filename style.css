@@ -11,7 +11,8 @@
 html {
   line-height: 1.5;
   font-size: 20px;
-  font-family: "Comic Sans MS", 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
+  font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+  font-weight: normal;
 }
 
 
@@ -69,7 +70,6 @@ body {
   text-align: center;
   justify-content: center;
   gap: 10px;
-  font-size: 7rem;
 }
 
 .cell {
@@ -77,6 +77,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.cell>div {
+  margin-top: 30px;
+  font-size: 12rem;
 }
 
 .winning-cell {

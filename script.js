@@ -162,7 +162,8 @@ const displayController = function () {
     const canvasOverlayContainer = document.querySelector(".canvas-overlay-container");
     const alertOverlayContainer = document.querySelector(".alert-overlay-container");
     const alertOverlayButton = document.querySelector("button");
-    return { domGameBoard, canvasOverlay, canvasOverlayContainer, alertOverlayContainer, alertOverlayButton };
+    const winAlertText = document.querySelector(".win-alert-text");
+    return { domGameBoard, canvasOverlay, canvasOverlayContainer, alertOverlayContainer, alertOverlayButton, winAlertText };
   }();
 
   domElements.alertOverlayButton.addEventListener("click", () => {
@@ -176,12 +177,12 @@ const displayController = function () {
     domElements.alertOverlayContainer.style.visibility = "visible";
   };
 
-  function assignImg(input) {
+  function assignMarker(input) {
     if (input) {
       const marker = document.createElement("div");
       const markers = {
-        X: "X",
-        O: "O",
+        X: "x",
+        O: "o",
       }
       marker.textContent = markers[input];
       return marker;
@@ -200,9 +201,9 @@ const displayController = function () {
     genCell.setAttribute("data-x", x.indexOf(y));
     genCell.setAttribute("data-y", y.indexOf(cellItem));
     genCell.classList.add(cellItem.winningCellValue());
-    const img = assignImg(cellItem.getValue());
+    const marker = assignMarker(cellItem.getValue());
     genCell.classList.add("cell", cellItem.getValue());
-    genCell.appendChild(img);
+    genCell.appendChild(marker);
     return (genCell);
   }
 
@@ -225,8 +226,8 @@ const displayController = function () {
 
   function drawOverlay(winningCells) {
     displayOverlay();
+    domElements.winAlertText.textContent = winningCells[0].getValue();
     const cellCoords = function cellsToCoordinates() {
-      console.log(winningCells);
       const firstCell = winningCells[0];
       const lastCell = winningCells[2];
       const canvasSize = 440;
