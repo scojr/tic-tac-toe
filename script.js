@@ -171,6 +171,7 @@ const displayController = function () {
     gameLogic.newGame();
     domElements.canvasOverlayContainer.style.visibility = "hidden";
     domElements.alertOverlayContainer.style.visibility = "hidden";
+    domElements.winAlertText.textContent = "Tic·Tac·Toe"
   });
 
   function displayOverlay() {

@@ -59,6 +59,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: inset 0 0 300px 10px rgba(0, 0, 0, 0.25);
 }
 
 .border {
@@ -112,10 +113,11 @@ body {
 }
 
 .alert-overlay-container button {
-  border: 1px solid black;
+  position: relative;
+  bottom: 45px;
+  border: 1px solid #34302d;
   border-radius: 50px;
   padding: 15px 20px 5px;
-  margin-top: -20px;
   font-size: 2rem;
   background-color: #f5e7de;
   font-family: inherit;
@@ -161,7 +163,18 @@ button:hover {
 }
 
 .alert-overlay-container h2 {
-  margin: 50px 0 0 0;
+  margin: 100px 0 0 0;
   font-size: 6rem;
   font-weight: bold;
+  visibility: visible;
+  -webkit-text-stroke: 1px 34302d;
+  color: #f5e7de;
+  text-shadow:
+    3px 3px 0 #34302d,
+    -1px -1px 0 #34302d,
+    1px -1px 0 #34302d,
+    -1px 1px 0 #34302d,
+    1px 1px 0 #34302d,
+    0px 0px 8px rgba(0, 0, 0, 0.4);
+
 }
