@@ -201,8 +201,12 @@ const displayController = function () {
     genCell.setAttribute("data-x", x.indexOf(y));
     genCell.setAttribute("data-y", y.indexOf(cellItem));
     genCell.classList.add(cellItem.winningCellValue());
+    function cellValueClass(value) {
+      if (!value) return "empty";
+      else return value;
+    }
     const marker = assignMarker(cellItem.getValue());
-    genCell.classList.add("cell", cellItem.getValue());
+    genCell.classList.add("cell", cellValueClass(cellItem.getValue()));
     genCell.appendChild(marker);
     return (genCell);
   }
@@ -248,7 +252,7 @@ const displayController = function () {
     pen.lineTo(cellCoords.lastY, cellCoords.lastX);
     console.log(cellCoords.lastX, cellCoords.lastY);
     pen.lineWidth = 10;
-    pen.strokeStyle = 'green';
+    pen.strokeStyle = '#ef9849';
     pen.stroke();
   }
 
