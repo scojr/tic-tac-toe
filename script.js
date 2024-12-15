@@ -134,6 +134,7 @@ const gameLogic = (function () {
 
   function tieDetected() {
     console.log(`It's a Tie!`)
+    displayController.drawOverlay(null, true);
 
     endGame()
     playRound();
@@ -228,32 +229,37 @@ const displayController = function () {
     }
   }
 
-  function drawOverlay(winningCells) {
-    displayOverlay();
-    domElements.winAlertText.textContent = winningCells[0].getValue();
-    const cellCoords = function cellsToCoordinates() {
-      const firstCell = winningCells[0];
-      const lastCell = winningCells[2];
-      const canvasSize = 440;
-      function convertCanvasCoord(cellxy) {
-        if (cellxy === 0) return 10; else if (cellxy === 2) return 430; else return cellxy * canvasSize / 2;
-      };
-      const firstX = convertCanvasCoord(firstCell.x);
-      const firstY = convertCanvasCoord(firstCell.y);
-      const lastX = convertCanvasCoord(lastCell.x);
-      const lastY = convertCanvasCoord(lastCell.y);
-      return { firstX, firstY, lastX, lastY }
-    }();
+  function drawOverlay(winningCells, tie) {
     const pen = domElements.canvasOverlay.getContext("2d");
     pen.clearRect(0, 0, 440, 440);
     pen.beginPath()
-    pen.moveTo(cellCoords.firstY, cellCoords.firstX);
-    console.log(cellCoords.firstX, cellCoords.firstY);
-    pen.lineTo(cellCoords.lastY, cellCoords.lastX);
-    console.log(cellCoords.lastX, cellCoords.lastY);
-    pen.lineWidth = 10;
-    pen.strokeStyle = '#ef9849';
-    pen.stroke();
+    if (tie) {
+      displayOverlay();
+      domElements.winAlertText.textContent = "It's a tie!"
+    } else {
+      displayOverlay();
+      domElements.winAlertText.textContent = `${winningCells[0].getValue()} Wins!`;
+      const cellCoords = function cellsToCoordinates() {
+        const firstCell = winningCells[0];
+        const lastCell = winningCells[2];
+        const canvasSize = 440;
+        function convertCanvasCoord(cellxy) {
+          if (cellxy === 0) return 10; else if (cellxy === 2) return 430; else return cellxy * canvasSize / 2;
+        };
+        const firstX = convertCanvasCoord(firstCell.x);
+        const firstY = convertCanvasCoord(firstCell.y);
+        const lastX = convertCanvasCoord(lastCell.x);
+        const lastY = convertCanvasCoord(lastCell.y);
+        return { firstX, firstY, lastX, lastY }
+      }();
+      pen.moveTo(cellCoords.firstY, cellCoords.firstX);
+      console.log(cellCoords.firstX, cellCoords.firstY);
+      pen.lineTo(cellCoords.lastY, cellCoords.lastX);
+      console.log(cellCoords.lastX, cellCoords.lastY);
+      pen.lineWidth = 10;
+      pen.strokeStyle = '#ef9849';
+      pen.stroke();
+    }
   }
 
   return { drawGrid, drawOverlay, displayOverlay, };
